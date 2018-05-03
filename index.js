@@ -6,6 +6,7 @@ const config = require("./config.json");
 const https = require("https");
 const dateFormat = require("dateformat");
 const fs = require("fs");
+const util = require("./util.js");
 
 let globals = require("./variables.js");
 globals.geardb = require("./gear.json");
@@ -26,23 +27,6 @@ if(DEBUG){
 
 function setStatus(){
     client.user.setActivity("Active");
-}
-
-function displayName(user){
-    if(user instanceof Discord.GuildMember){
-        //When in a server, people can rename themselves
-        return user.nickname || user.user.username;
-    }else if(user instanceof Discord.User){
-        //When in a dm, default to their username
-        return user.username;
-    }else if(user.username){
-        //Grasp at straws...
-        return user.username;
-    }else if(user.id){
-        return user.id;
-    }else{
-        return "unknown";
-    }
 }
 
 async function quit(){
@@ -126,10 +110,6 @@ function uploadImage(url, nickname){
     });
 };
 
-async function saveGear(){
-    fs.renameSync("./gear.json", "./gear.old.json");
-    fs.writeFileSync("./gear.json", JSON.stringify(globals.geardb));
-}
 
 async function handleGearDM(msg){
     let guildMember = globals.guild.member(msg.author);
@@ -150,7 +130,7 @@ async function handleGearDM(msg){
 
     log(Discord);
 
-    let name = guildMember.nickname || msg.author.username;
+    let name = util.displayName(guildMember);
 
     let newgearlink;
     try{
@@ -165,7 +145,7 @@ async function handleGearDM(msg){
 
     msg.react(emojis.check);
     msg.reply("Gear sucessfully updated.");
-    log(`${guildMember.name} (${msg.author.username}) has updated their gear to ${newgearlink}`);
+    log(`${name} has updated their gear to ${newgearlink}`);
 
     let gearMsg = await globals.gearChannelUpdate.send(`<@!${msg.author.id}> has updated their gear: ${gearlink}`);
     await gearMsg.react(emojis.check);
@@ -183,15 +163,15 @@ async function handleGearDM(msg){
         status: "unverified",
         userID: msg.author.id,
     };
-    await saveGear();
+    await util.saveGear();
 }
 
 const commands = require("./commands.js");
 
 async function handleGearChannel(msg){
     for(let command of Object.keys(commands)){
-        if(msg.content.split(" ")[0].toLowerCase() === "!" + command){
-            log(`${msg.author.username} ran '${command}': ${msg.content}`);
+        if(msg.content.split(" ")[0].toLowerCase() === config.prefix + command){
+            log(`${util.displayName(msg.author)} ran '${command}': ${msg.content}`);
             await commands[command](msg);
             break;
         }
@@ -228,14 +208,14 @@ client.on("messageReactionAdd", async (msgReaction, reactingUser) => {
         }else{
             return;
         }
-        log(`${reactingUser.username} reacted to ${gearInfo.name}, ${gearInfo.status}`);
+        log(`${util.displayName(reactingUser)} reacted to ${gearInfo.name}, ${gearInfo.status}`);
 
         let msg = await globals.gearChannelUpdate.fetchMessage(gearInfo.gearChannelMsg);
         await msg.clearReactions();
         msg.react(gearInfo.status === "accepted" && emojis.check || emojis.x);
         msg.react(emojis.ok);
 
-        await saveGear();
+        await util.saveGear();
 
         let user = globals.guild.members.find(user => user.user.id === gearInfo.userID);
         if(user){
