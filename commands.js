@@ -97,7 +97,7 @@ async function status(msg){
         total++;
         let gear = globals.geardb[user.id];
         if(!gear){
-            categories.unsent.push(gear);
+            categories.unsent.push(user);
             continue;
         }
 
@@ -121,7 +121,7 @@ async function status(msg){
     let embed = new Discord.RichEmbed()
     embed.setTitle("Gear stats");
     embed.setDescription(`${goodcount}/${total}, ${goodcount*100/total}% submissions\n`);
-    embed.addField(categories.unsent    .length + " Unsent",     `${categories.unsent    .map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    embed.addField(categories.unsent    .length + " Unsent",     `${categories.unsent    .map(u => ("<@!" + u.id     + ">")).join(" ") || "None"}`);
     embed.addField(categories.unverified.length + " Unverified", `${categories.unverified.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
     embed.addField(categories.denied    .length + " Denied",     `${categories.denied    .map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
     embed.addField(categories.accepted  .length + " Accepted",   `${categories.accepted  .map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
