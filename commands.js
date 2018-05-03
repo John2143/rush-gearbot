@@ -121,11 +121,12 @@ async function status(msg){
     let embed = new Discord.RichEmbed()
     embed.setTitle("Gear stats");
     embed.setDescription(`${goodcount}/${total}, ${goodcount*100/total}% submissions\n`);
-    embed.addField(categories.unsent    .length + " Unsent",     `${categories.unsent    .map(u => ("<@!" + u.id     + ">")).join(" ") || "None"}`);
-    embed.addField(categories.unverified.length + " Unverified", `${categories.unverified.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
-    embed.addField(categories.denied    .length + " Denied",     `${categories.denied    .map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
-    embed.addField(categories.accepted  .length + " Accepted",   `${categories.accepted  .map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
-    embed.addField(categories.old       .length + " Old (>2wk)", `${categories.old       .map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    let c;
+    c = categories.unsent    ; embed.addField(c.length + " Unsent",     c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.id     + ">")).join(" ") || "None"}`);
+    c = categories.unverified; embed.addField(c.length + " Unverified", c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    c = categories.denied    ; embed.addField(c.length + " Denied",     c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    c = categories.accepted  ; embed.addField(c.length + " Accepted",   c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    c = categories.old       ; embed.addField(c.length + " Old (>2wk)", c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
     globals.gearChannelQuery.send({embed});
 }
 
