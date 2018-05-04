@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node index"
+    "test": "node index",
+    "startLog": "npm run start | tee log",
+    "start": "node index --color=always"
   },
   "author": "",
   "license": "ISC",
