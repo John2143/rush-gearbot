@@ -5,7 +5,6 @@ const client = new Discord.Client();
 const config = require("./config.json");
 const https = require("https");
 const dateFormat = require("dateformat");
-const fs = require("fs");
 const util = require("./util.js");
 
 let globals = require("./variables.js");
@@ -106,7 +105,6 @@ function uploadImage(url, nickname){
         };
         req.write(JSON.stringify(data));
         req.end();
-        log("sending");
     });
 };
 
@@ -127,8 +125,6 @@ async function handleGearDM(msg){
         if(!DEBUG) return;
     }
 
-
-    log(Discord);
 
     let name = util.displayName(guildMember);
 

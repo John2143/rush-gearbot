@@ -120,7 +120,7 @@ async function status(msg){
 
     let embed = new Discord.RichEmbed()
     embed.setTitle("Gear stats");
-    embed.setDescription(`${goodcount}/${total}, ${goodcount*100/total}% submissions\n`);
+    embed.setDescription(`${goodcount}/${total}, ${goodcount*100/total | 0}% submissions\n`);
     let c;
     c = categories.unsent    ; embed.addField(c.length + " Unsent",     c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.id     + ">")).join(" ") || "None"}`);
     c = categories.unverified; embed.addField(c.length + " Unverified", c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
