@@ -8,7 +8,6 @@ const dateFormat = require("dateformat");
 const util = require("./util.js");
 
 let globals = require("./variables.js");
-globals.geardb = require("./gear.json");
 
 const chalk = require("chalk");
 
@@ -18,6 +17,18 @@ function logMeta(color, ...args){
 
 global.log = (...args) => {
     logMeta("white", ...args);
+}
+
+try{
+    globals.geardb = require("./gear.json");
+}catch(e){
+    globals.geardb = {};
+    log("gear not found, restore from backup attempt.");
+    try{
+        globals.geardb = require("./gear.old.json");
+    }catch(e){
+        log("no backup");
+    }
 }
 
 if(DEBUG){

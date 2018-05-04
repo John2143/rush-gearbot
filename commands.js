@@ -72,7 +72,7 @@ async function deletegear(msg){
     let member = getUserByName(msg, name);
 
     if(!member) return;
-    globals.geardb[user.id] = undefined;
+    globals.geardb[member.id] = undefined;
     msg.channel.send(`Deleted <@!${member.id}>'s gear screenshot.`);
     await util.saveGear();
 }
@@ -87,7 +87,7 @@ async function status(msg){
         unverified: [],
         denied: [],
         accepted: [],
-        old: []
+        //old: []
     }
 
     let goodcount = 0;
@@ -112,21 +112,21 @@ async function status(msg){
 
         //14 days
         //const THRESHOLD = 1000 * 60 * 60 * 24 * 14;
-        const THRESHOLD = 1000 * 60;
-        if(gear.status.date + THRESHOLD < Date.now()){
-            categories.old.push(gear);
-        }
+        //const THRESHOLD = 1000 * 60;
+        //if(gear.status.date + THRESHOLD < Date.now()){
+            //categories.old.push(gear);
+        //}
     }
 
-    let embed = new Discord.RichEmbed()
+    let embed = new Discord.RichEmbed();
     embed.setTitle("Gear stats");
     embed.setDescription(`${goodcount}/${total}, ${goodcount*100/total | 0}% submissions\n`);
     let c;
-    c = categories.unsent    ; embed.addField(c.length + " Unsent",     c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.id     + ">")).join(" ") || "None"}`);
-    c = categories.unverified; embed.addField(c.length + " Unverified", c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
-    c = categories.denied    ; embed.addField(c.length + " Denied",     c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
-    c = categories.accepted  ; embed.addField(c.length + " Accepted",   c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
-    c = categories.old       ; embed.addField(c.length + " Old (>2wk)", c.length > 20 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    c = categories.unsent    ; embed.addField(c.length + " Unsent",     c.length > 15 && "<many>" || `${c.map(u => ("<@!" + u.id     + ">")).join(" ") || "None"}`);
+    c = categories.unverified; embed.addField(c.length + " Unverified", c.length > 15 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    c = categories.denied    ; embed.addField(c.length + " Denied",     c.length > 15 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    c = categories.accepted  ; embed.addField(c.length + " Accepted",   c.length > 15 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
+    //c = categories.old       ; embed.addField(c.length + " Old (>2wk)", c.length > 15 && "<many>" || `${c.map(u => ("<@!" + u.userID + ">")).join(" ") || "None"}`);
     globals.gearChannelQuery.send({embed});
 }
 
@@ -137,7 +137,7 @@ ${config.prefix}gearbackup <name>: Backup link if the first link breaks
 ${config.prefix}debug: debug info about a user
 ${config.prefix}update <name>: requests a gear update
 ${config.prefix}status: gear status
-${config.prefix}delete <name>: remove gear screenshot
+${config.prefix}deletegear <name>: remove gear screenshot
 ${config.prefix}ping <name>: same as !update\`\`\``);
 }
 

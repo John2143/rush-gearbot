@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const fs = require("fs");
+let globals = require("./variables.js");
 
 function displayName(user){
     if(user instanceof Discord.GuildMember){
@@ -19,8 +20,9 @@ function displayName(user){
 }
 
 async function saveGear(){
-    fs.renameSync("./gear.json", "./gear.old.json");
     fs.writeFileSync("./gear.json", JSON.stringify(globals.geardb));
+    fs.renameSync("./gear.json", "./gear.old.json");
+    log("saved gear");
 }
 
 module.exports = {displayName, saveGear};
