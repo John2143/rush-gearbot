@@ -20,8 +20,8 @@ function displayName(user){
 }
 
 async function saveGear(){
-    fs.writeFileSync("./gear.json", JSON.stringify(globals.geardb));
     fs.renameSync("./gear.json", "./gear.old.json");
+    fs.writeFileSync("./gear.json", JSON.stringify(globals.geardb));
     log("saved gear");
 }
 
