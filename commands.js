@@ -30,6 +30,12 @@ function getUserByName(msg, name){
     return member;
 }
 
+function sendRich(channel, text){
+    let embed = new Discord.RichEmbed();
+    embed.setDescription(text);
+    channel.send(embed);
+}
+
 async function infometa(msg, f){
     let name = msg.content.split(" ")[1];
     let member = getUserByName(msg, name);
@@ -38,7 +44,7 @@ async function infometa(msg, f){
 
     let gear = globals.geardb[member.id];
     if(!gear){
-        msg.channel.send(`Could not find gear for <@!${member.id}>`);
+        sendRich(msg.channel, `Could not find gear for <@!${member.id}>`);
     }else{
         f(member, gear);
     }
@@ -46,12 +52,22 @@ async function infometa(msg, f){
 
 async function gear(msg){
     return infometa(msg, (member, gear) => {
-        msg.channel.send(`Gear for <@!${member.id}> as of ${dateFormat(globals.dateFormat)} ${gear.originalLink}`);
+        let embed = new Discord.RichEmbed();
+        embed.setTitle("Gear");
+        embed.setDescription(`<@!${member.id}>`);
+        embed.addField(`${dateFormat(globals.dateFormat)}`, `${gear.originalLink}`);
+        embed.setImage(gear.originalLink);
+        msg.channel.send(embed);
     });
 }
 async function gearbackup(msg){
     return infometa(msg, (member, gear) => {
-        msg.channel.send(`Gear for <@!${member.id}> as of ${dateFormat(globals.dateFormat)} ${gear.imgurLink}`);
+        let embed = new Discord.RichEmbed();
+        embed.setTitle("Gear");
+        embed.setDescription(`<@!${member.id}>`);
+        embed.addField(`${dateFormat(globals.dateFormat)}`, `${gear.imgurLink}`);
+        embed.setImage(gear.imgurLink);
+        msg.channel.send(embed);
     });
 }
 async function debug(msg){
@@ -63,8 +79,8 @@ async function update(msg){
     let name = msg.content.split(" ")[1];
     let member = getUserByName(msg, name);
 
-    if(!member) return;
-    msg.channel.send(`asking <@!${member.id}> for an updated gear screenshot.`);
+    if(!member) return
+    sendRich(msg.channel, `asking <@!${member.id}> for an updated gear screenshot.`);
     member.send(`A gear update has been requested by an officer. Please DM a gear screenshot in this chat.`);
 }
 async function deletegear(msg){
@@ -73,7 +89,7 @@ async function deletegear(msg){
 
     if(!member) return;
     globals.geardb[member.id] = undefined;
-    msg.channel.send(`Deleted <@!${member.id}>'s gear screenshot.`);
+    sendRich(msg.channel, `Deleted <@!${member.id}>'s gear screenshot.`);
     await util.saveGear();
 }
 
